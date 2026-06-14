@@ -1,0 +1,115 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String        @id @default(uuid())
+  email        String        @unique
+  passwordHash String
+  name         String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  memberships  GroupMember[]
+  paidExpenses Expense[]     @relation("PaidExpenses")
+  splits       ExpenseSplit[]
+  imports      ImportSession[]
+}
+
+model Group {
+  id          String          @id @default(uuid())
+  name        String
+  description String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  members     GroupMember[]
+  expenses    Expense[]
+  imports     ImportSession[]
+}
+
+model GroupMember {
+  id        String    @id @default(uuid())
+  groupId   String
+  group     Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  joinedAt  DateTime  @default(now())
+  leftAt    DateTime?
+  role      String    @default("MEMBER") // ADMIN, MEMBER
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@unique([groupId, userId])
+}
+
+model Expense {
+  id           String         @id @default(uuid())
+  groupId      String
+  group        Group          @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  description  String
+  amount       Decimal        // Original amount
+  currency     String         // e.g. USD, INR, EUR
+  exchangeRate Decimal        @default(1.0) // Rate to convert amount to base currency (USD)
+  paidById     String
+  paidBy       User           @relation("PaidExpenses", fields: [paidById], references: [id], onDelete: Cascade)
+  date         DateTime
+  splitType    String         // EQUAL, EXACT, PERCENTAGE, SHARE
+  isSettlement Boolean        @default(false)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  splits       ExpenseSplit[]
+  resolvedFrom ImportedExpense[]
+}
+
+model ExpenseSplit {
+  id         String   @id @default(uuid())
+  expenseId  String
+  expense    Expense  @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount     Decimal  // Calculated amount in original currency
+  percentage Decimal? // Optional percentage
+  share      Decimal? // Optional share count
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([expenseId, userId])
+}
+
+model ImportSession {
+  id           String            @id @default(uuid())
+  groupId      String
+  group        Group             @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  importedById String
+  importedBy   User              @relation(fields: [importedById], references: [id], onDelete: Cascade)
+  filename     String
+  status       String            @default("PENDING") // PENDING, COMPLETED, CANCELLED
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  rows         ImportedExpense[]
+}
+
+model ImportedExpense {
+  id                String         @id @default(uuid())
+  sessionId         String
+  session           ImportSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  rawRowData        String         // JSON string representation of the raw CSV row
+  description       String
+  amount            Decimal
+  currency          String
+  paidByEmail       String
+  date              DateTime
+  splitType         String
+  splitsData        String         // JSON string representing splits format e.g. [{"email": "aisha@example.com", "value": 50}]
+  anomalies         String         // JSON string array of anomaly warnings
+  status            String         @default("PENDING_REVIEW") // PENDING_REVIEW, APPROVED, REJECTED, RESOLVED
+  correctedData     String?        // JSON string representing edited and corrected details if modified
+  resolvedExpenseId String?
+  resolvedExpense   Expense?       @relation(fields: [resolvedExpenseId], references: [id], onDelete: SetNull)
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+}

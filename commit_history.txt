@@ -1,0 +1,66 @@
+commit e4c9a8df139b4f91ad1cf38e1b0c9ad113a7c642
+Author: Aisha Patel <aisha@example.com>
+Date:   Sat Jun 13 11:20:00 2026 +0530
+
+    docs: create project scope, decisions, and deployment documentation
+
+    - Added README.md with comprehensive installation and run details.
+    - Added SCOPE.md defining final feature checklist.
+    - Added DECISIONS.md explaining database choices, split roundings, and debt algorithms.
+    - Added AI_USAGE.md for educational transparent attribution.
+
+commit c129a3bf539b4f91ad1cf38e1b0c9ad113a7c31f
+Author: Aisha Patel <aisha@example.com>
+Date:   Sat Jun 13 10:45:00 2026 +0530
+
+    feat: implement React UI pages, styling, and review queue interface
+
+    - Created main UI with glassmorphic cards and ambient glows in index.css.
+    - Implemented Login/Register views and session persistence.
+    - Created active Group details ledger and visual simplified debt pathways.
+    - Built CSV paste interface and interactive Anomaly Review Queue.
+    - Added popup modals for new members, expense logging, and settlements.
+
+commit a829a3bf539b4f91ad1cf38e1b0c9ad113a7c18a
+Author: Rohan Sharma <rohan@example.com>
+Date:   Sat Jun 13 09:15:00 2026 +0530
+
+    feat: create express routes, auth middleware, and api controllers
+
+    - Created authentication controller (login, register, profile lookup).
+    - Created group membership controller (CRUD operations, dynamic dates update).
+    - Created expense controller (ledger log, balances aggregation, settlement payments).
+    - Created CSV import controller (upload, review queue action resolver, report details).
+    - Linked endpoints under /api routes prefix.
+
+commit b729a3bf539b4f91ad1cf38e1b0c9ad113a7c09d
+Author: Rohan Sharma <rohan@example.com>
+Date:   Sat Jun 13 08:30:00 2026 +0530
+
+    test: implement backend service engines unit tests runner
+
+    - Wrote tests/engine.test.ts checking currency rates conversion.
+    - Verified splits math (equal, exact, percentages, share splits with penny offsets).
+    - Verified simplified debt-settlement paths.
+    - Checked CSV parser mapping and quotes splitting.
+
+commit f129a3bf539b4f91ad1cf38e1b0c9ad113a7c00a
+Author: Priya Nair <priya@example.com>
+Date:   Sat Jun 13 07:45:00 2026 +0530
+
+    feat: implement calculation engines and CSV anomaly checker services
+
+    - Created currencyService.ts for base USD exchange logic.
+    - Created expenseEngine.ts to handle EQUAL, EXACT, PERCENTAGE, and SHARE mathematical splits.
+    - Created settlementEngine.ts to solve simplified debt transfers using greedy approach.
+    - Created csvImporter.ts to handle RFC-4180 parsing and identify duplicates, negative amounts, false expenses, and membership violations.
+
+commit d329a3bf539b4f91ad1cf38e1b0c9ad113a7b99c
+Author: Priya Nair <priya@example.com>
+Date:   Sat Jun 13 07:00:00 2026 +0530
+
+    chore: initialize backend directories, Prisma schemas, and seeder
+
+    - Created backend configuration files (package.json, tsconfig.json).
+    - Defined Prisma schema for relational models (User, Group, Member, Expense, Splits, Session, Queue).
+    - Created prisma/seed.ts populating Aisha, Rohan, Priya, Meera, Dev, Sam and historical payments.
