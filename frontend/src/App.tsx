@@ -12,8 +12,6 @@ import {
   User,
   LogOut,
   TrendingUp,
-  ArrowDownLeft,
-  ArrowUpRight,
   FileText,
   Calendar,
   Layers,
@@ -21,7 +19,6 @@ import {
   Info,
   Check,
   X,
-  RefreshCw,
   AlertCircle
 } from "lucide-react";
 
@@ -669,7 +666,7 @@ export default function App() {
       })),
     };
 
-    handleQueueResolve(editQueueRow.id, "correct", finalCorrection);
+    handleQueueResolve(editQueueRow.id, "approve", finalCorrection);
     setEditQueueRow(null);
   };
 
