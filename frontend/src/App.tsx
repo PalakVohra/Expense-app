@@ -122,7 +122,7 @@ interface ImportSession {
   _count?: { rows: number };
 }
 
-const API_BASE = "http://localhost:5000/api";
+const API_BASE = "https://expense-app-b3ip.onrender.com/api";
 
 export default function App() {
   // Navigation & Auth State
